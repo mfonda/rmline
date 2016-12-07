@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @author Matt Fonda <matthewfonda@gmail.com>
+ */
+
+if (!isset($argv[1], $argv[2])) {
+    usage($argv);
+}
+$filename = $argv[1];
+$lines = file($filename);
+$count = count($lines);
+
+$start = $argv[2];
+if (!is_numeric($start) || $start < 1 || $start > $count) {
+    usage($argv);
+}
+
+$end = isset($argv[3]) ? $argv[3] : $start;
+if (!is_numeric($end) || $end < $start || $end > $count) {
+    usage($argv);
+}
+
+$removed = array_splice($lines, $start - 1, $end - $start + 1);
+echo implode($removed);
+file_put_contents($filename, implode($lines));
+
+function usage($argv)
+{
+    echo "Usage: " . $argv[0] . " <filename> <line number> [ending line number]\n";
+    exit(1);
+}
